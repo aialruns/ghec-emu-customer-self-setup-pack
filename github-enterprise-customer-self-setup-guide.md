@@ -40,7 +40,7 @@ This guide is for first-time enterprise administrators setting up GitHub Enterpr
 - An identity administrator for your identity provider
 - An Azure administrator for Azure subscription connection
 - A security or compliance stakeholder who can confirm hosting, identity, and credential-handling requirements
-- A network administrator to confirm GHE.com allowlists and restricted egress controls
+- A network administrator to confirm required network controls, including GHE.com allowlists and restricted egress rules
 
 ### What this guide covers
 
@@ -122,7 +122,7 @@ Do not begin detailed configuration until these blockers are cleared:
 - Your security, compliance, and network stakeholders are available to confirm any required controls for hosting, authentication, and connectivity.
 - You have identified at least one pilot user and one pilot group for testing.
 - You know which Azure subscription will be connected and who can approve it.
-- You have an approved credential vault or other approved secret storage location for recovery codes, SCIM tokens, and any SAML certificate details, such as an enterprise password manager or managed secrets vault that meets your security policy.
+- You have an approved credential vault, enterprise password manager, or managed secrets vault for recovery codes, SCIM tokens, and any SAML certificate details. The storage solution must meet your security policy.
 
 ### Permissions required to start
 
@@ -399,7 +399,7 @@ Run this procedure before you move from pilot setup to broader rollout. In regul
 | Azure billing connected and confirmed | | |
 | Copilot seats assigned and active in the IDE, if enabled | | |
 
-If any item is incomplete, resolve it before broader rollout. Do not expand beyond the pilot scope until the responsible admin, security, and operational stakeholders agree that validation is complete.
+If any item is incomplete, resolve it before broader rollout. Do not expand beyond the pilot scope until the responsible admin, security, and operational stakeholders provide documented approval that validation is complete.
 
 ---
 
