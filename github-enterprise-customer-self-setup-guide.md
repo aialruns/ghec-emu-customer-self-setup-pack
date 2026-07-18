@@ -40,7 +40,7 @@ This guide is for first-time enterprise administrators setting up GitHub Enterpr
 - An identity administrator for your identity provider
 - An Azure administrator for Azure subscription connection
 - A security or compliance stakeholder who can confirm hosting, identity, and credential-handling requirements
-- A network administrator to confirm required network controls, including GHE.com allowlists and restricted egress rules
+- A network administrator to confirm required network controls, including GitHub Enterprise hosting endpoint allowlists and restricted egress rules
 
 ### What this guide covers
 
@@ -99,7 +99,7 @@ Use this table to choose the safest path before you begin detailed setup.
 | Decision area | Option | Choose this when | Notes |
 | --- | --- | --- | --- |
 | Hosting | `GitHub.com` | Your organization does not require data residency and has approved GitHub.com hosting for the pilot scope | Confirm no residency-specific requirement applies before rollout |
-| Hosting | `GHE.com` | You need GitHub data residency in a supported region | Confirm region choice, network allowlists, feature differences, and internal approval before rollout |
+| Hosting | `GHE.com` | You need GitHub data residency in a supported region | Confirm region choice and internal approval before rollout; track network allowlists and feature differences in your rollout checklist |
 | Authentication | `OIDC` | You use Microsoft Entra ID or prefer modern federation without SAML certificate lifecycle | Recommended default for Entra unless policy requires `SAML` |
 | Authentication | `SAML` | Your policy, provider standard, or existing operating model requires SAML | Plan for certificate ownership, renewal, and testing before enablement |
 | Billing | Azure billing | Required billing path for this guide; use the Azure subscription that will own charges and invoicing | Requires an eligible Azure admin and subscription access |
@@ -123,6 +123,8 @@ Do not begin detailed configuration until these blockers are cleared:
 - You have identified at least one pilot user and one pilot group for testing.
 - You know which Azure subscription will be connected and who can approve it.
 - You have an approved credential vault, enterprise password manager, or managed secrets vault for recovery codes, SCIM tokens, and any SAML certificate details. The storage solution must meet your security policy.
+
+Use your customer runbook, change ticket, or other approved internal record to capture validation evidence, failed tests, and approval decisions throughout setup.
 
 ### Permissions required to start
 
