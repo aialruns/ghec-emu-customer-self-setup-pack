@@ -10,7 +10,7 @@
 
 - [Overview](#overview)
 - [Audience, Scope, and Success Criteria](#audience-scope-and-success-criteria)
-- [Fast Path for a First Pilot](#fast-path-for-a-first-pilot)
+- [Controlled Pilot Path](#controlled-pilot-path)
 - [Early Decisions](#early-decisions)
 - [Before You Begin](#before-you-begin)
 - [Setup Phases](#setup-phases)
@@ -22,7 +22,9 @@
 
 ## Overview
 
-This guide helps you set up GitHub Enterprise Cloud (GHEC) with Enterprise Managed Users (EMU) using a self-service approach. It follows the setup path most customers use so you can configure authentication, provisioning, billing, and pilot-user validation before broader rollout.
+This guide helps you set up GitHub Enterprise Cloud (GHEC) with Enterprise Managed Users (EMU) using a self-service approach. It follows a controlled setup path that is practical for any first setup and especially well-suited for regulated, public sector, and government environments.
+
+Use it to configure authentication, provisioning, Azure billing, and pilot-user validation before broader rollout.
 
 Use this guide if you want one document that is practical, easy to follow, and detailed enough to complete setup confidently on your own.
 
@@ -32,11 +34,13 @@ Use this guide if you want one document that is practical, easy to follow, and d
 
 ### Intended audience
 
-This guide is for first-time enterprise administrators setting up GitHub Enterprise Cloud with EMU. It assumes coordination between:
+This guide is for first-time enterprise administrators setting up GitHub Enterprise Cloud with EMU in regulated, public sector, or government environments. It assumes coordination between:
 
 - A GitHub enterprise setup admin
 - An identity administrator for your identity provider
-- An Azure administrator, if Azure billing will be connected
+- An Azure administrator for Azure subscription connection
+- A security or compliance stakeholder who can confirm hosting, identity, and credential-handling requirements
+- A network administrator to confirm required network controls, including GitHub Enterprise hosting endpoint allowlists and restricted egress rules
 
 ### What this guide covers
 
@@ -46,7 +50,7 @@ This guide covers:
 - Securing the setup admin
 - Configuring authentication for EMU
 - Configuring SCIM provisioning for pilot users and groups
-- Connecting Azure billing, if applicable
+- Connecting Azure billing
 - Optionally enabling GitHub Copilot for a pilot group
 - Validating that the tenant is ready for broader rollout
 
@@ -65,26 +69,26 @@ This guide does not cover:
 By the end of this guide, you should have:
 
 - A working GitHub Enterprise Cloud enterprise with EMU
-- A secured setup admin with 2FA and recovery codes stored safely
+- A secured setup admin with 2FA and recovery codes stored in approved credential storage
 - Successful authentication for at least one pilot managed user
 - Successful SCIM provisioning for pilot users and groups
-- Billing connected and verified, if required
+- Azure billing connected and verified
 - Optional Copilot access verified for a pilot group
 
 ---
 
-## Fast Path for a First Pilot
+## Controlled Pilot Path
 
-If your goal is a safe pilot before broader rollout, use this path first:
+If your goal is a controlled pilot before broader rollout, use this path first:
 
 1. Create the enterprise and secure the setup admin.
-2. Choose your hosting, authentication, billing, and Copilot timing decisions before changing settings.
+2. Choose your hosting, authentication, Azure billing, and Copilot timing decisions before changing settings.
 3. Configure authentication for one pilot user or pilot group only.
 4. Configure SCIM for the same pilot scope and verify user creation in enterprise **People**.
-5. Validate sign-in, provisioning, and billing before assigning more users.
+5. Validate sign-in, provisioning, and Azure billing before assigning more users.
 6. Enable Copilot only after core identity validation unless Copilot access is part of the pilot success criteria.
 
-If any pilot check fails, stop there and fix it before moving to broader user assignments.
+If any pilot check fails, stop there, record the result, and fix it before moving to broader user assignments.
 
 ---
 
@@ -94,12 +98,11 @@ Use this table to choose the safest path before you begin detailed setup.
 
 | Decision area | Option | Choose this when | Notes |
 | --- | --- | --- | --- |
-| Hosting | `GitHub.com` | You do not need data residency and want the simplest hosting path | Best fit for customers who do not have residency-specific requirements |
-| Hosting | `GHE.com` | You need GitHub data residency in a supported region | Confirm region choice, network allowlists, and feature differences before rollout |
+| Hosting | `GitHub.com` | Your organization does not require data residency and has approved GitHub.com hosting for the pilot scope | Confirm no residency-specific requirement applies before rollout |
+| Hosting | `GHE.com` | You need GitHub data residency in a supported region | Confirm region choice and internal approval before rollout; track network allowlists and feature differences in your rollout checklist |
 | Authentication | `OIDC` | You use Microsoft Entra ID or prefer modern federation without SAML certificate lifecycle | Recommended default for Entra unless policy requires `SAML` |
 | Authentication | `SAML` | Your policy, provider standard, or existing operating model requires SAML | Plan for certificate ownership, renewal, and testing before enablement |
-| Billing | Azure billing | You purchased GitHub through Azure Marketplace or need Azure-based billing alignment | Requires an eligible Azure admin and subscription access |
-| Billing | GitHub direct billing | Your GitHub billing is managed directly with GitHub | No Azure subscription connection is needed |
+| Billing | Azure billing | Required billing path for this guide; use the Azure subscription that will own charges and invoicing | Requires an eligible Azure admin and subscription access |
 | Copilot timing | Enable Copilot during pilot | Copilot validation is a required pilot outcome | Keep the scope to a small pilot team only |
 | Copilot timing | Enable Copilot after identity validation | Your priority is safe EMU sign-in and provisioning first | Recommended default for first-time setup |
 
@@ -114,10 +117,14 @@ Most setup delays are caused by missing permissions, missing required values, or
 Do not begin detailed configuration until these blockers are cleared:
 
 - You know whether the enterprise will be hosted on `GitHub.com` or `GHE.com`.
+- Your organization has confirmed that the hosting choice meets policy and residency requirements.
 - Your identity provider team is available to create or update the enterprise application.
+- Your security, compliance, and network stakeholders are available to confirm any required controls for hosting, authentication, and connectivity.
 - You have identified at least one pilot user and one pilot group for testing.
-- If using Azure billing, you know which Azure subscription will be connected and who can approve it.
-- You have a secure place to store recovery codes, SCIM tokens, and any SAML certificate details.
+- You know which Azure subscription will be connected and who can approve it.
+- You have an approved credential vault, enterprise password manager, or managed secrets vault for recovery codes, SCIM tokens, and any SAML certificate details. The storage solution must meet your security policy.
+
+Use your customer runbook, change ticket, or other approved internal record to capture validation evidence, failed tests, and approval decisions throughout setup.
 
 ### Permissions required to start
 
@@ -125,7 +132,7 @@ Do not begin detailed configuration until these blockers are cleared:
 | --- | --- | --- |
 | GitHub enterprise setup admin (from the welcome email) | Create the enterprise, configure EMU, and recover access if needed | Your GitHub admin |
 | Identity provider admin access (for example, Entra Cloud Application Administrator or equivalent) | Create the enterprise application, assign pilot users, and configure federation and SCIM | Your identity admin |
-| Permission to grant tenant-wide admin consent, if using Azure billing | Complete the Azure subscription connection | Your Azure admin |
+| Permission to grant tenant-wide admin consent for Azure billing | Complete the Azure subscription connection | Your Azure admin |
 
 ### Values to collect before setup
 
@@ -137,10 +144,9 @@ Do not begin detailed configuration until these blockers are cleared:
 | Data residency region, if using `GHE.com` | |
 | Identity provider (`Entra`, `Okta`, `PingFederate`, or other) | |
 | Authentication method (`OIDC` or `SAML`) | |
-| Billing method (`Azure` or `GitHub direct`) | |
 | Pilot user or pilot group for authentication testing | |
 | Pilot group for SCIM provisioning | |
-| Azure subscription name or ID, if using Azure billing | |
+| Azure subscription name or ID | |
 | Copilot pilot team, if enabling Copilot | |
 
 ### Dependencies by phase
@@ -148,8 +154,8 @@ Do not begin detailed configuration until these blockers are cleared:
 | Area | Dependencies that must exist first |
 | --- | --- |
 | Authentication | Enterprise created, setup admin secured, chosen auth method confirmed, pilot user or group assigned in the identity provider |
-| SCIM provisioning | Authentication path selected, pilot provisioning group created, SCIM token owner identified, secure token storage available |
-| Azure billing | Enterprise created, billing method confirmed as Azure, eligible Azure admin and target subscription identified |
+| SCIM provisioning | Authentication path selected, pilot provisioning group created, SCIM token owner identified, approved secret storage available |
+| Azure billing | Enterprise created, eligible Azure admin and target subscription identified |
 
 ### Reference links
 
@@ -168,7 +174,7 @@ The choices you make here determine how your enterprise is hosted, where data is
 **What to do**
 
 1. Open the enterprise creation page and choose **Get started with managed users**.
-2. Under **Data hosting**, choose your `GHE.com` data residency region, or leave the default to host on `GitHub.com`.
+2. Under **Data hosting**, choose the option you approved in **Early Decisions**: select your `GHE.com` data residency region, or leave the default for `GitHub.com`.
 3. Enter the enterprise name, slug or subdomain, industry, number of seats, country or region, identity provider, admin name, and work email.
 4. Accept the terms and click **Create enterprise**.
 
@@ -186,15 +192,15 @@ Capture the completed form before final submission. Mask sensitive fields.
 ### Phase 2 — Secure the setup admin
 
 **Why this matters**  
-The setup admin account is the primary account used to complete setup and recover access if needed.
+The setup admin account is the primary account used to complete setup and serve as a controlled emergency recovery path if managed-user access or federation changes fail.
 
 **What to do**
 
 1. Open the welcome email in a private or incognito browser window.
 2. Set a strong password.
 3. Enable two-factor authentication (2FA).
-4. Store recovery codes in your approved secure location.
-5. Keep this account available as your emergency recovery access path until pilot validation is complete.
+4. Store recovery codes in your approved credential vault or other approved secret storage location.
+5. Keep this account available as a controlled emergency recovery access path until pilot validation is complete.
 
 **What you should see**
 
@@ -213,7 +219,7 @@ Managed users cannot access GitHub until authentication is configured and workin
 
 **Choose your path**
 
-- Prefer `OIDC` if you use Microsoft Entra ID and do not have a policy requirement for `SAML`.
+- Prefer `OIDC` if you use Microsoft Entra ID and do not have a policy or compliance requirement for `SAML`.
 - Use `SAML` if your organization requires it or your identity architecture is already standardized on SAML.
 
 **Reference links**
@@ -259,6 +265,7 @@ Do not expand assignments until at least one pilot user can sign in successfully
 - Keep the setup admin session open while you troubleshoot.
 - Correct the identity provider values or user assignments, then rerun the test.
 - If you already enabled the configuration and pilot access fails, use the setup admin session to revert the recent authentication change before continuing.
+- Record the failed test condition and corrective action in your runbook or change record for audit and handoff purposes.
 
 **Screenshot checkpoint**  
 Capture the identity provider configuration page and the GitHub authentication validation success message.
@@ -278,9 +285,11 @@ SCIM automatically creates and updates managed users and group memberships from 
 **Before you start**
 
 - Decide who owns the SCIM token. For first-time setup, use a documented admin-owned pattern so the token is not tied to an unknown or temporary owner.
-- Store the token in your approved secret storage system.
+- Store the token in your approved secret storage system or credential vault.
 - Record when the token was created, who owns it, and when it must be rotated.
 - Keep provisioning scoped to the pilot group until create, update, and access behavior are validated.
+- Record pilot provisioning results so the team has evidence before broader rollout.
+- If provisioning tests fail, record the failed condition and corrective action in your runbook or change record before retrying.
 
 **What to do**
 
@@ -312,10 +321,10 @@ Capture the SCIM test success screen and the GitHub enterprise **People** list w
 
 ---
 
-### Phase 5 — Connect Azure subscription *(if using Azure billing)*
+### Phase 5 — Connect Azure subscription
 
 **Why this matters**  
-This step connects your billing relationship so charges and invoicing behave as expected.
+This step connects Azure billing so charges and invoicing align with your approved Azure subscription and operating model.
 
 **Reference links**
 
@@ -371,7 +380,7 @@ Capture the Copilot policy enabled screen and the team license assignment screen
 
 ## Validation Procedure
 
-Run this procedure before you move from pilot setup to broader rollout.
+Run this procedure before you move from pilot setup to broader rollout. In regulated environments, retain the resulting evidence for handoff, review, or approval.
 
 | Step | What to test | Expected result | Evidence to capture |
 | --- | --- | --- | --- |
@@ -379,7 +388,7 @@ Run this procedure before you move from pilot setup to broader rollout.
 | 2 | Sign in as one pilot managed user through the configured auth flow | Pilot user reaches the enterprise successfully | Successful sign-in screen or enterprise landing page |
 | 3 | Provision one pilot user on demand through SCIM | Managed user appears in enterprise **People** | SCIM success screen and **People** entry |
 | 4 | Update pilot group membership | Membership change is reflected as expected | Identity provider assignment change and resulting GitHub state |
-| 5 | Connect billing, if applicable | Billing method is connected and visible | Billing summary page |
+| 5 | Connect Azure billing | Azure subscription is connected and visible | Billing summary page |
 | 6 | Validate Copilot, if applicable | Pilot user can access Copilot in the IDE | Copilot policy screen and IDE confirmation |
 
 ### Concise go/no-go checklist
@@ -389,10 +398,10 @@ Run this procedure before you move from pilot setup to broader rollout.
 | Setup admin secured with 2FA and recovery codes | | |
 | Authentication works for a pilot managed user | | |
 | SCIM provisioning works for pilot users and groups | | |
-| Billing method connected and confirmed, if using Azure billing | | |
+| Azure billing connected and confirmed | | |
 | Copilot seats assigned and active in the IDE, if enabled | | |
 
-If any item is incomplete, resolve it before broader rollout.
+If any item is incomplete, resolve it before broader rollout. Do not expand beyond the pilot scope until the responsible admin, security, and operational stakeholders provide documented approval that validation is complete.
 
 ---
 
@@ -416,6 +425,7 @@ When troubleshooting, capture:
 - The failing screen
 - The exact identity provider assignment used for testing
 - The time of the test so you can compare it with provisioning or authentication logs
+- Any evidence or screenshots retained for approval, with sensitive values masked
 
 ---
 
@@ -423,19 +433,19 @@ When troubleshooting, capture:
 
 ### Ready for broader rollout when
 
-- The setup admin path is secured and documented.
+- The setup admin path is secured, documented, and retained as a controlled recovery path.
 - Pilot authentication succeeds for at least one managed user.
 - SCIM create and update behavior is validated for the pilot scope.
-- Billing is connected and confirmed, if applicable.
+- Azure billing is connected and confirmed.
 - Optional Copilot access is working for the pilot users, if enabled.
-- Required evidence and screenshots are stored for handoff or signoff.
+- Required evidence and screenshots are stored for handoff, signoff, or audit review.
 
 ### Immediate next operational steps
 
 1. Confirm network allowlists for `GHE.com` endpoints, if using data residency.
 2. Review any feature differences for data residency before broader rollout.
-3. Publish an internal admin SOP for SCIM token rotation, certificate refresh if using `SAML`, and setup-admin recovery.
-4. Decide who owns day-2 operations for identity, billing, and enterprise policy changes.
+3. Publish an internal admin SOP for SCIM token rotation, certificate refresh if using `SAML`, setup-admin recovery, and evidence retention.
+4. Decide who owns day-2 operations for identity, Azure billing, enterprise policy changes, and rollout evidence.
 5. Stand up enterprise organizations and baseline policy sets.
 6. Expand from the pilot group in controlled stages rather than all at once.
 7. Roll out GitHub Copilot at scale and GitHub Advanced Security only after the core enterprise path is stable.
