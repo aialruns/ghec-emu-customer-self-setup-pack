@@ -38,7 +38,7 @@ This guide is for first-time enterprise administrators setting up GitHub Enterpr
 - An identity administrator for your identity provider
 - An Azure administrator for Azure subscription connection
 - A security or compliance stakeholder who can confirm hosting, identity, and credential-handling requirements
-- A network administrator, if `GHE.com` allowlists or restricted egress controls apply
+- A network administrator, if GHE.com allowlists or restricted egress controls apply
 
 ### What this guide covers
 
@@ -96,7 +96,7 @@ Use this table to choose the safest path before you begin detailed setup.
 
 | Decision area | Option | Choose this when | Notes |
 | --- | --- | --- | --- |
-| Hosting | `GitHub.com` | Your organization has confirmed that data residency is not required by policy, contract, or internal review | Use only after confirming no residency-specific requirement applies |
+| Hosting | `GitHub.com` | Your organization does not require data residency and approves GitHub.com for the pilot scope | Confirm no residency-specific requirement applies before rollout |
 | Hosting | `GHE.com` | You need GitHub data residency in a supported region or your environment requires region-specific data handling | Confirm region choice, network allowlists, feature differences, and internal approval before rollout |
 | Authentication | `OIDC` | You use Microsoft Entra ID or prefer modern federation without SAML certificate lifecycle | Recommended default for Entra unless policy requires `SAML` |
 | Authentication | `SAML` | Your policy, provider standard, or existing operating model requires SAML | Plan for certificate ownership, renewal, and testing before enablement |
@@ -170,7 +170,7 @@ The choices you make here determine how your enterprise is hosted, where data is
 **What to do**
 
 1. Open the enterprise creation page and choose **Get started with managed users**.
-2. Under **Data hosting**, choose your approved `GHE.com` data residency region, or leave the default to host on `GitHub.com` only if policy and residency review allow it.
+2. Under **Data hosting**, choose your approved `GHE.com` data residency region, or leave the default to host on `GitHub.com` if your internal policy allows it for this rollout.
 3. Enter the enterprise name, slug or subdomain, industry, number of seats, country or region, identity provider, admin name, and work email.
 4. Accept the terms and click **Create enterprise**.
 
@@ -440,7 +440,7 @@ When troubleshooting, capture:
 1. Confirm network allowlists for `GHE.com` endpoints, if using data residency.
 2. Review any feature differences for data residency before broader rollout.
 3. Publish an internal admin SOP for SCIM token rotation, certificate refresh if using `SAML`, setup-admin recovery, and evidence retention.
-4. Decide who owns day-2 operations for identity, Azure billing, enterprise policy changes, and audit-related operational records.
+4. Decide who owns day-2 operations for identity, Azure billing, enterprise policy changes, and the validation evidence and operational records captured during rollout.
 5. Stand up enterprise organizations and baseline policy sets.
 6. Expand from the pilot group in controlled stages rather than all at once.
 7. Roll out GitHub Copilot at scale and GitHub Advanced Security only after the core enterprise path is stable.
