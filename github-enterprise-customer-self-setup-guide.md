@@ -8,15 +8,15 @@
 
 ## Overview
 
-This guide walks your team through self-service setup of GitHub Enterprise Cloud (GHEC) with Enterprise Managed Users (EMU). It covers the setup flow in the order most customers should complete it so your enterprise is authenticated, provisioned, billed, and validated for pilot users before go-live.
+This guide walks you through setting up GitHub Enterprise Cloud (GHEC) with Enterprise Managed Users (EMU) using a self-service approach. It follows the setup sequence most customers use so you can configure authentication, provisioning, billing, and pilot-user validation before go-live.
 
-Use this guide if you want a single document that is concise, actionable, and easy to follow without live GitHub hand-holding.
+Use this guide if you want a single document that is practical, easy to follow, and detailed enough to complete setup confidently on your own.
 
 ---
 
-## Prerequisites
+## Before You Begin
 
-Missing roles, values, or permissions is the most common cause of setup delays.
+Most setup delays are caused by missing permissions, missing setup values, or completing steps out of order.
 
 ### Required roles
 
@@ -51,7 +51,7 @@ Missing roles, values, or permissions is the most common cause of setup delays.
 ### Phase 1 — Create the enterprise
 
 **Why this matters**  
-Your enterprise type and hosting choice determine the authentication model, data location, and future management pattern.
+The choices you make here determine how your enterprise is hosted, where data is stored, and how users will sign in and be managed.
 
 **What to do**
 
@@ -62,9 +62,9 @@ Your enterprise type and hosting choice determine the authentication model, data
 
 **What you should see**
 
-- Enterprise creation confirmation
-- Welcome email for the setup admin
-- If using data residency, the invitation email may take up to an hour to arrive
+- A confirmation that your enterprise was created
+- A welcome email for the setup admin
+- If you’re using data residency, the invitation email may take up to an hour to arrive
 
 **Screenshot checkpoint**  
 Capture the completed form before final submission. Mask sensitive fields.
@@ -74,7 +74,7 @@ Capture the completed form before final submission. Mask sensitive fields.
 ### Phase 2 — Secure the setup admin
 
 **Why this matters**  
-The setup admin is your break-glass identity for authentication, provisioning changes, and recovery.
+The setup admin account is the main account used to complete setup and recover access if something goes wrong.
 
 **What to do**
 
@@ -86,7 +86,7 @@ The setup admin is your break-glass identity for authentication, provisioning ch
 **What you should see**
 
 - Successful sign-in to the enterprise overview
-- 2FA enabled for the setup user
+- 2FA enabled for the setup admin
 
 **Screenshot checkpoint**  
 Capture the enterprise overview and 2FA confirmation screen. Mask sensitive values.
@@ -96,10 +96,10 @@ Capture the enterprise overview and 2FA confirmation screen. Mask sensitive valu
 ### Phase 3 — Configure authentication
 
 **Why this matters**  
-Managed users cannot access enterprise resources until authentication is configured and working.
+Managed users cannot access GitHub until authentication is configured and working correctly.
 
 **Recommended path**  
-For Microsoft Entra ID, prefer `OIDC` unless `SAML` is required by policy.
+If you use Microsoft Entra ID, `OIDC` is the recommended option unless your organization requires `SAML`.
 
 **Reference links**
 
@@ -118,7 +118,7 @@ For Microsoft Entra ID, prefer `OIDC` unless `SAML` is required by policy.
 **What you should see**
 
 - GitHub confirms the provider settings are valid
-- SSO is enabled
+- SSO is enabled successfully
 
 **Screenshot checkpoint**  
 Capture the Entra SAML configuration page and the GitHub SSO validation success message.
@@ -128,7 +128,7 @@ Capture the Entra SAML configuration page and the GitHub SSO validation success 
 ### Phase 4 — Configure SCIM provisioning
 
 **Why this matters**  
-SCIM creates and updates managed users and group memberships from your identity provider.
+SCIM automatically creates and updates managed users and group memberships from your identity provider.
 
 **Reference links**
 
@@ -144,11 +144,11 @@ SCIM creates and updates managed users and group memberships from your identity 
    - `GHE.com` EMU: `https://api.{subdomain}.ghe.com/scim/v2/enterprises/{subdomain}`
 4. Paste the PAT as the secret token.
 5. Click **Test Connection**, save the configuration, then start provisioning.
-6. Use **Provision on demand** for pilot users.
+6. Use **Provision on demand** for your pilot users.
 
 **What you should see**
 
-- Test connection succeeds
+- The test connection succeeds
 - Pilot users are provisioned and visible in enterprise **People**
 
 **Screenshot checkpoint**  
@@ -159,7 +159,7 @@ Capture the SCIM test success screen and the GitHub enterprise **People** list w
 ### Phase 5 — Connect Azure subscription *(if using Azure billing)*
 
 **Why this matters**  
-Billing and invoicing behavior changes after the Azure connection is configured.
+This step connects your billing relationship so charges and invoicing behave as expected.
 
 **Reference links**
 
@@ -185,7 +185,7 @@ Capture the connected Azure subscription summary screen.
 ### Phase 6 — Enable GitHub Copilot *(optional)*
 
 **Why this matters**  
-Policy and team mapping enable repeatable access management without manual seat-by-seat operations.
+Enterprise policy and team mapping help you manage access consistently without assigning seats one at a time.
 
 **Reference links**
 
@@ -202,7 +202,7 @@ Policy and team mapping enable repeatable access management without manual seat-
 
 **What you should see**
 
-- Seats are consumed for mapped team members
+- Seats are assigned to mapped team members
 - Pilot users can access Copilot in the IDE
 
 **Screenshot checkpoint**  
@@ -212,7 +212,7 @@ Capture the Copilot policy enabled screen and the team license assignment screen
 
 ## Validation Checklist
 
-Complete all rows before declaring go-live.
+Complete each item before you move to broad rollout.
 
 | Validation item | Status | Evidence |
 | --- | --- | --- |
@@ -222,7 +222,7 @@ Complete all rows before declaring go-live.
 | Billing method connected and confirmed | | |
 | Copilot seats assigned and active in the IDE | | |
 
-If any row fails, resolve it before go-live.
+If any item is not complete, resolve it before go-live.
 
 ---
 
@@ -234,7 +234,7 @@ If any row fails, resolve it before go-live.
 | SAML settings are rejected | URL format mismatch or trailing slash issue | Re-enter the Identifier, Reply URL, and Sign-on URL exactly as documented for your slug |
 | SCIM test connection fails | Wrong tenant URL, wrong token scope, or expired PAT | Correct the tenant URL pattern and recreate the PAT with `scim:enterprise` |
 | Users are not provisioning | Provisioning not started, wrong scoping, or sync delay | Start provisioning, check scope assignments, and use **Provision on demand** |
-| Managed user cannot sign in | User is using a personal GitHub username instead of the managed username | Use the managed username and the identity provider sign-in flow |
+| Managed user cannot sign in | The user is trying to sign in with a personal GitHub username instead of the managed username | Use the managed username and the identity provider sign-in flow |
 | Azure subscription cannot connect | Missing tenant-wide admin consent rights | Use an eligible Azure admin account or complete the consent workflow |
 | Copilot seat assigned but no IDE access | Team mapping incomplete or policy not enabled | Verify team membership, enterprise policy, and seat assignment |
 
@@ -243,7 +243,7 @@ If any row fails, resolve it before go-live.
 ## After Go-Live
 
 1. Confirm network allowlists for `GHE.com` endpoints, if using data residency.
-2. Review feature differences for data residency before broad rollout.
+2. Review any feature differences for data residency before broad rollout.
 3. Add an internal admin SOP for PAT rotation and certificate refresh.
 4. Stand up enterprise organizations and baseline policy sets.
 5. Roll out GitHub Copilot at scale and enable GitHub Advanced Security.
