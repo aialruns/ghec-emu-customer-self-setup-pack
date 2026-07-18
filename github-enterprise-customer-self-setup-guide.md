@@ -8,15 +8,15 @@
 
 ## Overview
 
-This guide walks you through setting up GitHub Enterprise Cloud (GHEC) with Enterprise Managed Users (EMU) using a self-service approach. It follows the setup sequence most customers use so you can configure authentication, provisioning, billing, and pilot-user validation before go-live.
+This guide helps you set up GitHub Enterprise Cloud (GHEC) with Enterprise Managed Users (EMU) using a self-service approach. It follows the setup path most customers use so you can configure authentication, provisioning, billing, and pilot-user validation before go-live.
 
-Use this guide if you want a single document that is practical, easy to follow, and detailed enough to complete setup confidently on your own.
+Use this guide if you want one document that is practical, easy to follow, and detailed enough to complete setup confidently on your own.
 
 ---
 
 ## Before You Begin
 
-Most setup delays are caused by missing permissions, missing setup values, or completing steps out of order.
+Most setup delays are caused by missing permissions, missing required values, or completing steps out of order.
 
 ### Required roles
 
@@ -51,13 +51,13 @@ Most setup delays are caused by missing permissions, missing setup values, or co
 ### Phase 1 — Create the enterprise
 
 **Why this matters**  
-The choices you make here determine how your enterprise is hosted, where data is stored, and how users will sign in and be managed.
+The choices you make here determine how your enterprise is hosted, where data is stored, and how users sign in and are managed.
 
 **What to do**
 
 1. Open the enterprise creation page and choose **Get started with managed users**.
-2. Under **Data hosting**, choose your `GHE.com` data residency region or leave the default to host on `GitHub.com`.
-3. Complete the enterprise name, slug or subdomain, industry, number of seats, country or region, identity provider, admin name, and work email.
+2. Under **Data hosting**, choose your `GHE.com` data residency region, or leave the default to host on `GitHub.com`.
+3. Enter the enterprise name, slug or subdomain, industry, number of seats, country or region, identity provider, admin name, and work email.
 4. Accept the terms and click **Create enterprise**.
 
 **What you should see**
@@ -74,7 +74,7 @@ Capture the completed form before final submission. Mask sensitive fields.
 ### Phase 2 — Secure the setup admin
 
 **Why this matters**  
-The setup admin account is the main account used to complete setup and recover access if something goes wrong.
+The setup admin account is the primary account used to complete setup and recover access if needed.
 
 **What to do**
 
@@ -107,7 +107,7 @@ If you use Microsoft Entra ID, `OIDC` is the recommended option unless your orga
 - [SAML for EMU](https://docs.github.com/en/enterprise-cloud@latest/admin/managing-iam/configuring-authentication-for-enterprise-managed-users/configuring-saml-single-sign-on-for-enterprise-managed-users)
 - [Entra SAML walkthrough](https://learn.microsoft.com/en-us/entra/identity/saas-apps/github-enterprise-managed-user-tutorial)
 
-**If using SAML**
+**If you’re using SAML**
 
 1. In Entra ID, create the **GitHub Enterprise Managed User** enterprise application.
 2. Assign at least one pilot user as **Enterprise Owner**.
@@ -198,7 +198,7 @@ Enterprise policy and team mapping help you manage access consistently without a
 2. Create enterprise teams for Copilot users.
 3. Map the teams to identity provider groups for lifecycle automation.
 4. Assign Copilot licenses to those teams.
-5. Validate that pilot users can sign in from the IDE and use Copilot.
+5. Confirm that pilot users can sign in from the IDE and use Copilot.
 
 **What you should see**
 
@@ -212,7 +212,7 @@ Capture the Copilot policy enabled screen and the team license assignment screen
 
 ## Validation Checklist
 
-Complete each item before you move to broad rollout.
+Complete each item before you move to a broader rollout.
 
 | Validation item | Status | Evidence |
 | --- | --- | --- |
@@ -222,7 +222,7 @@ Complete each item before you move to broad rollout.
 | Billing method connected and confirmed | | |
 | Copilot seats assigned and active in the IDE | | |
 
-If any item is not complete, resolve it before go-live.
+If any item is incomplete, resolve it before go-live.
 
 ---
 
