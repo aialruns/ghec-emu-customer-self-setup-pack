@@ -22,7 +22,7 @@
 
 ## Overview
 
-This guide helps you set up GitHub Enterprise Cloud (GHEC) with Enterprise Managed Users (EMU) using a self-service approach. It follows a controlled setup path suitable for regulated, public sector, and government environments.
+This guide helps you set up GitHub Enterprise Cloud (GHEC) with Enterprise Managed Users (EMU) using a self-service approach. It follows a controlled setup path that is practical for any first setup and especially well-suited for regulated, public sector, and government environments.
 
 Use it to configure authentication, provisioning, Azure billing, and pilot-user validation before broader rollout.
 
@@ -102,7 +102,7 @@ Use this table to choose the safest path before you begin detailed setup.
 | Hosting | `GHE.com` | You need GitHub data residency in a supported region | Confirm region choice, network allowlists, feature differences, and internal approval before rollout |
 | Authentication | `OIDC` | You use Microsoft Entra ID or prefer modern federation without SAML certificate lifecycle | Recommended default for Entra unless policy requires `SAML` |
 | Authentication | `SAML` | Your policy, provider standard, or existing operating model requires SAML | Plan for certificate ownership, renewal, and testing before enablement |
-| Billing | Azure billing | Standard path for government customers and other Azure-aligned deployments | Requires an eligible Azure admin and subscription access |
+| Billing | Azure billing | Required billing path for this guide; use the Azure subscription that will own charges and invoicing | Requires an eligible Azure admin and subscription access |
 | Copilot timing | Enable Copilot during pilot | Copilot validation is a required pilot outcome | Keep the scope to a small pilot team only |
 | Copilot timing | Enable Copilot after identity validation | Your priority is safe EMU sign-in and provisioning first | Recommended default for first-time setup |
 
@@ -122,7 +122,7 @@ Do not begin detailed configuration until these blockers are cleared:
 - Your security, compliance, and network stakeholders are available to confirm any required controls for hosting, authentication, and connectivity.
 - You have identified at least one pilot user and one pilot group for testing.
 - You know which Azure subscription will be connected and who can approve it.
-- You have an approved credential vault or other approved secret storage location for recovery codes, SCIM tokens, and any SAML certificate details.
+- You have an approved credential vault or other approved secret storage location for recovery codes, SCIM tokens, and any SAML certificate details, such as an enterprise password manager or managed secrets vault that meets your security policy.
 
 ### Permissions required to start
 
@@ -263,7 +263,7 @@ Do not expand assignments until at least one pilot user can sign in successfully
 - Keep the setup admin session open while you troubleshoot.
 - Correct the identity provider values or user assignments, then rerun the test.
 - If you already enabled the configuration and pilot access fails, use the setup admin session to revert the recent authentication change before continuing.
-- Record the failed test condition and corrective action for audit and handoff purposes.
+- Record the failed test condition and corrective action in your runbook or change record for audit and handoff purposes.
 
 **Screenshot checkpoint**  
 Capture the identity provider configuration page and the GitHub authentication validation success message.
@@ -287,7 +287,7 @@ SCIM automatically creates and updates managed users and group memberships from 
 - Record when the token was created, who owns it, and when it must be rotated.
 - Keep provisioning scoped to the pilot group until create, update, and access behavior are validated.
 - Record pilot provisioning results so the team has evidence before broader rollout.
-- If provisioning tests fail, record the failed condition and corrective action before retrying.
+- If provisioning tests fail, record the failed condition and corrective action in your runbook or change record before retrying.
 
 **What to do**
 
