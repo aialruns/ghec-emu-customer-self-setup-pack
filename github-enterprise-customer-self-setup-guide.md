@@ -38,7 +38,7 @@ This guide is for first-time enterprise administrators setting up GitHub Enterpr
 - An identity administrator for your identity provider
 - An Azure administrator for Azure subscription connection
 - A security or compliance stakeholder who can confirm hosting, identity, and credential-handling requirements
-- A network administrator, if GHE.com allow-lists or restricted egress controls apply
+- A network administrator, if GHE.com allowlists or restricted egress controls apply
 
 ### What this guide covers
 
@@ -97,7 +97,7 @@ Use this table to choose the safest path before you begin detailed setup.
 | Decision area | Option | Choose this when | Notes |
 | --- | --- | --- | --- |
 | Hosting | `GitHub.com` | Your organization does not require data residency and approves GitHub.com for the pilot scope | Confirm no residency-specific requirement applies before rollout |
-| Hosting | `GHE.com` | You need GitHub data residency in a supported region or your environment requires region-specific data handling | Confirm region choice, network allow-lists, feature differences, and internal approval before rollout |
+| Hosting | `GHE.com` | You need GitHub data residency in a supported region or your environment requires region-specific data handling | Confirm region choice, network allowlists, feature differences, and internal approval before rollout |
 | Authentication | `OIDC` | You use Microsoft Entra ID or prefer modern federation without SAML certificate lifecycle | Recommended default for Entra unless policy requires `SAML` |
 | Authentication | `SAML` | Your policy, provider standard, or existing operating model requires SAML | Plan for certificate ownership, renewal, and testing before enablement |
 | Billing | Azure billing | Standard path for government customers and other Azure-aligned deployments | Requires an eligible Azure admin and subscription access |
@@ -437,7 +437,7 @@ When troubleshooting, capture:
 
 ### Immediate next operational steps
 
-1. Confirm network allow-lists for `GHE.com` endpoints, if using data residency.
+1. Confirm network allowlists for `GHE.com` endpoints, if using data residency.
 2. Review any feature differences for data residency before broader rollout.
 3. Publish an internal admin SOP for SCIM token rotation, certificate refresh if using `SAML`, setup-admin recovery, and evidence retention.
 4. Decide who owns day-2 operations for identity, Azure billing, enterprise policy changes, and the validation evidence and operational records captured during rollout.
