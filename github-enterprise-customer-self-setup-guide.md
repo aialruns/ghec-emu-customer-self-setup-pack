@@ -92,16 +92,16 @@ If any pilot check fails, stop there and fix it before moving to broader user as
 
 Use this table to choose the safest path before you begin detailed setup.
 
-| Decision | Choose this when | Notes |
-| --- | --- | --- |
-| `GitHub.com` | You do not need data residency and want the simplest hosting path | Best fit for customers who do not have residency-specific requirements |
-| `GHE.com` | You need GitHub data residency in a supported region | Confirm region choice, network allowlists, and feature differences before rollout |
-| `OIDC` | You use Microsoft Entra ID or prefer modern federation without SAML certificate lifecycle | Recommended default for Entra unless policy requires `SAML` |
-| `SAML` | Your policy, provider standard, or existing operating model requires SAML | Plan for certificate ownership, renewal, and testing before enablement |
-| Azure billing | You purchased GitHub through Azure Marketplace or need Azure-based billing alignment | Requires an eligible Azure admin and subscription access |
-| GitHub direct billing | Your GitHub billing is managed directly with GitHub | No Azure subscription connection is needed |
-| Enable Copilot during pilot | Copilot validation is a required pilot outcome | Keep the scope to a small pilot team only |
-| Enable Copilot after identity validation | Your priority is safe EMU sign-in and provisioning first | Recommended default for first-time setup |
+| Decision area | Option | Choose this when | Notes |
+| --- | --- | --- | --- |
+| Hosting | `GitHub.com` | You do not need data residency and want the simplest hosting path | Best fit for customers who do not have residency-specific requirements |
+| Hosting | `GHE.com` | You need GitHub data residency in a supported region | Confirm region choice, network allowlists, and feature differences before rollout |
+| Authentication | `OIDC` | You use Microsoft Entra ID or prefer modern federation without SAML certificate lifecycle | Recommended default for Entra unless policy requires `SAML` |
+| Authentication | `SAML` | Your policy, provider standard, or existing operating model requires SAML | Plan for certificate ownership, renewal, and testing before enablement |
+| Billing | Azure billing | You purchased GitHub through Azure Marketplace or need Azure-based billing alignment | Requires an eligible Azure admin and subscription access |
+| Billing | GitHub direct billing | Your GitHub billing is managed directly with GitHub | No Azure subscription connection is needed |
+| Copilot timing | Enable Copilot during pilot | Copilot validation is a required pilot outcome | Keep the scope to a small pilot team only |
+| Copilot timing | Enable Copilot after identity validation | Your priority is safe EMU sign-in and provisioning first | Recommended default for first-time setup |
 
 ---
 
@@ -194,7 +194,7 @@ The setup admin account is the primary account used to complete setup and recove
 2. Set a strong password.
 3. Enable two-factor authentication (2FA).
 4. Store recovery codes in your approved secure location.
-5. Keep this account available as your break-glass path until pilot validation is complete.
+5. Keep this account available as your emergency recovery access path until pilot validation is complete.
 
 **What you should see**
 
@@ -253,8 +253,12 @@ Managed users cannot access GitHub until authentication is configured and workin
 **Testing note before broader rollout**  
 Do not expand assignments until at least one pilot user can sign in successfully, reach the enterprise, and complete the expected managed-user flow.
 
-**Recovery or rollback if the auth test fails**  
-Do not broaden user assignments or start SCIM rollout. Keep the setup admin session open, correct the identity provider values or user assignments, and rerun the test. If you already enabled the configuration and pilot access fails, use the setup admin session to revert the recent authentication change before continuing.
+**Recovery or rollback if the auth test fails**
+
+- Do not broaden user assignments or start SCIM rollout.
+- Keep the setup admin session open while you troubleshoot.
+- Correct the identity provider values or user assignments, then rerun the test.
+- If you already enabled the configuration and pilot access fails, use the setup admin session to revert the recent authentication change before continuing.
 
 **Screenshot checkpoint**  
 Capture the identity provider configuration page and the GitHub authentication validation success message.
@@ -301,7 +305,7 @@ SCIM automatically creates and updates managed users and group memberships from 
 1. Provision one pilot user on demand and confirm the managed user appears in enterprise **People**.
 2. Provision a second pilot user, if available, to confirm repeatability.
 3. Change pilot group membership in the identity provider and confirm the update is reflected.
-4. Before broad rollout, run one controlled remove-or-unassign test for a noncritical pilot account so you understand the expected lifecycle behavior in your environment.
+4. Before broad rollout, run one controlled remove-or-unassign test for a noncritical pilot account and verify the expected lifecycle result in GitHub, such as the account being deprovisioned, suspended, or otherwise updated according to your identity provider flow.
 
 **Screenshot checkpoint**  
 Capture the SCIM test success screen and the GitHub enterprise **People** list with pilot users.
@@ -385,7 +389,7 @@ Run this procedure before you move from pilot setup to broader rollout.
 | Setup admin secured with 2FA and recovery codes | | |
 | Authentication works for a pilot managed user | | |
 | SCIM provisioning works for pilot users and groups | | |
-| Billing method connected and confirmed, if required | | |
+| Billing method connected and confirmed, if using Azure billing | | |
 | Copilot seats assigned and active in the IDE, if enabled | | |
 
 If any item is incomplete, resolve it before broader rollout.
