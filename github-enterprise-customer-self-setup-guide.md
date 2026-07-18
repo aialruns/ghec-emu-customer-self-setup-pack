@@ -305,7 +305,7 @@ SCIM automatically creates and updates managed users and group memberships from 
 1. Provision one pilot user on demand and confirm the managed user appears in enterprise **People**.
 2. Provision a second pilot user, if available, to confirm repeatability.
 3. Change pilot group membership in the identity provider and confirm the update is reflected.
-4. Before broad rollout, run one controlled remove-or-unassign test for a noncritical pilot account and verify the expected lifecycle result in GitHub, such as the account being deprovisioned, suspended, or otherwise updated according to your identity provider flow.
+4. Before broad rollout, run one controlled remove-or-unassign test for a noncritical pilot account. Verify the expected lifecycle result in GitHub, such as the account being deprovisioned, suspended, or otherwise updated according to your identity provider flow.
 
 **Screenshot checkpoint**  
 Capture the SCIM test success screen and the GitHub enterprise **People** list with pilot users.
@@ -411,7 +411,11 @@ Use this table as a quick diagnostics aid. Start with the first checks before ch
 | Azure subscription cannot connect | Confirm Azure admin consent rights and target subscription access | Azure admin session and GitHub billing page | Missing tenant-wide admin consent or subscription access | Use an eligible Azure admin account or complete the consent workflow |
 | Copilot seat assigned but no IDE access | Confirm enterprise policy, team mapping, and pilot team membership | Copilot policy, enterprise team membership, and IDE sign-in | Team mapping incomplete or policy not enabled | Verify team membership, enterprise policy, and seat assignment |
 
-When troubleshooting, capture the failing screen, the exact identity provider assignment used for testing, and the time of the test so you can compare it with provisioning or authentication logs.
+When troubleshooting, capture:
+
+- The failing screen
+- The exact identity provider assignment used for testing
+- The time of the test so you can compare it with provisioning or authentication logs
 
 ---
 
