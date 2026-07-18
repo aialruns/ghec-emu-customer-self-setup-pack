@@ -22,7 +22,9 @@
 
 ## Overview
 
-This guide helps you set up GitHub Enterprise Cloud (GHEC) with Enterprise Managed Users (EMU) using a self-service approach. It follows a controlled setup path suitable for regulated, public sector, and government environments so you can configure authentication, provisioning, Azure billing, and pilot-user validation before broader rollout.
+This guide helps you set up GitHub Enterprise Cloud (GHEC) with Enterprise Managed Users (EMU) using a self-service approach. It follows a controlled setup path suitable for regulated, public sector, and government environments.
+
+Use it to configure authentication, provisioning, Azure billing, and pilot-user validation before broader rollout.
 
 Use this guide if you want one document that is practical, easy to follow, and detailed enough to complete setup confidently on your own.
 
@@ -38,7 +40,7 @@ This guide is for first-time enterprise administrators setting up GitHub Enterpr
 - An identity administrator for your identity provider
 - An Azure administrator for Azure subscription connection
 - A security or compliance stakeholder who can confirm hosting, identity, and credential-handling requirements
-- A network administrator, if GHE.com allowlists or restricted egress controls apply
+- A network administrator to confirm GHE.com allowlists and restricted egress controls
 
 ### What this guide covers
 
@@ -96,8 +98,8 @@ Use this table to choose the safest path before you begin detailed setup.
 
 | Decision area | Option | Choose this when | Notes |
 | --- | --- | --- | --- |
-| Hosting | `GitHub.com` | Your organization does not require data residency and approves GitHub.com for the pilot scope | Confirm no residency-specific requirement applies before rollout |
-| Hosting | `GHE.com` | You need GitHub data residency in a supported region or your environment requires region-specific data handling | Confirm region choice, network allowlists, feature differences, and internal approval before rollout |
+| Hosting | `GitHub.com` | Your organization does not require data residency and has approved GitHub.com hosting for the pilot scope | Confirm no residency-specific requirement applies before rollout |
+| Hosting | `GHE.com` | You need GitHub data residency in a supported region | Confirm region choice, network allowlists, feature differences, and internal approval before rollout |
 | Authentication | `OIDC` | You use Microsoft Entra ID or prefer modern federation without SAML certificate lifecycle | Recommended default for Entra unless policy requires `SAML` |
 | Authentication | `SAML` | Your policy, provider standard, or existing operating model requires SAML | Plan for certificate ownership, renewal, and testing before enablement |
 | Billing | Azure billing | Standard path for government customers and other Azure-aligned deployments | Requires an eligible Azure admin and subscription access |
@@ -285,6 +287,7 @@ SCIM automatically creates and updates managed users and group memberships from 
 - Record when the token was created, who owns it, and when it must be rotated.
 - Keep provisioning scoped to the pilot group until create, update, and access behavior are validated.
 - Record pilot provisioning results so the team has evidence before broader rollout.
+- If provisioning tests fail, record the failed condition and corrective action before retrying.
 
 **What to do**
 
@@ -440,7 +443,7 @@ When troubleshooting, capture:
 1. Confirm network allowlists for `GHE.com` endpoints, if using data residency.
 2. Review any feature differences for data residency before broader rollout.
 3. Publish an internal admin SOP for SCIM token rotation, certificate refresh if using `SAML`, setup-admin recovery, and evidence retention.
-4. Decide who owns day-2 operations for identity, Azure billing, enterprise policy changes, and the validation evidence and operational records captured during rollout.
+4. Decide who owns day-2 operations for identity, Azure billing, enterprise policy changes, and rollout evidence.
 5. Stand up enterprise organizations and baseline policy sets.
 6. Expand from the pilot group in controlled stages rather than all at once.
 7. Roll out GitHub Copilot at scale and GitHub Advanced Security only after the core enterprise path is stable.
